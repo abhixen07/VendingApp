@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     _auth
         .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text.toString())
+        email: emailController.text,
+        password: passwordController.text.toString())
         .then((value) {
       Utils().toastMessage(value.user!.email.toString());
       Navigator.push(
@@ -118,17 +118,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-            // Inside your LoginScreen build method
-            RoundButton(
-              title: 'Login',
-              loading: loading,
-              onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  login();
-                }
-              },
-              buttonColor: Color(0xFFFFCC00), // Set your desired color here
-            ),
+                // Inside your LoginScreen build method
+                RoundButton(
+                  title: 'Login',
+                  loading: loading,
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      login();
+                    }
+                  },
+                  buttonColor: Color(0xFFFFCC00), // Set your desired color here
+                ),
 
 
                 const SizedBox(
@@ -159,10 +159,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(
-                        color: Colors.black,
-                      )
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(
+                          color: Colors.black,
+                        )
                     ),
                     child: Center(
                       child: Text('Login with phone'),

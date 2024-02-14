@@ -1,16 +1,18 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vending_app/ui/Drawer/FabTab.dart';
-
-import 'package:vending_app/ui/Pages/MyCartPage.dart';
 import 'package:vending_app/firebase_services/CartState.dart';
+import 'package:vending_app/ui/Drawer/FabTab.dart';
+import 'package:vending_app/ui/Pages/MyCartPage.dart';
 
-class BiscuitCategoryPage extends StatefulWidget {
+int count = 0;
+GlobalKey<badges.BadgeState> badgeKey = GlobalKey<badges.BadgeState>();
+final counterProvider = StateProvider<int>((ref) => 0);
+
+class BiscuitCategoryPage extends ConsumerStatefulWidget {
   final String title;
   final String catImage;
   final String tag;
@@ -23,11 +25,11 @@ class BiscuitCategoryPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BiscuitCategoryPage> createState() => _CategoriespageState();
+  ConsumerState<BiscuitCategoryPage> createState() => _CategoriespageState();
 }
 
-class _CategoriespageState extends State<BiscuitCategoryPage> {
-  final ref = FirebaseDatabase.instance
+class _CategoriespageState extends ConsumerState<BiscuitCategoryPage> {
+  final refa = FirebaseDatabase.instance
       .reference()
       .child('Products')
       .orderByChild('pid')
@@ -35,6 +37,7 @@ class _CategoriespageState extends State<BiscuitCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final count1 = ref.watch(counterProvider);
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -87,12 +90,17 @@ class _CategoriespageState extends State<BiscuitCategoryPage> {
               actions: [
                 Center(
                   child: badges.Badge(
-                    onTap: (){Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FabTabs(selectedIndex: 1)),
-                    );},
+                    key: badgeKey,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FabTabs(selectedIndex: 1),
+                        ),
+                      );
+                    },
                     badgeContent: Text(
-                      '0',
+                      count1.toString(),
                       style: TextStyle(color: Colors.white),
                     ),
                     child: Icon(
@@ -113,11 +121,10 @@ class _CategoriespageState extends State<BiscuitCategoryPage> {
             Expanded(
               child: FirebaseAnimatedList(
                 defaultChild: Text('loading'),
-                query: ref,
+                query: refa,
                 itemBuilder: (context, snapshot, animation, index) {
                   // Extract quantity from the snapshot
-                  int? quantity =
-                  (snapshot.child('quantity').value ?? 1) as int?;
+                  int? quantity = (snapshot.child('quantity').value ?? 1) as int?;
                   return ProductWidget(
                     snapshot: snapshot,
                     quantity: quantity!,
@@ -131,7 +138,6 @@ class _CategoriespageState extends State<BiscuitCategoryPage> {
     );
   }
 }
-
 
 class ProductWidget extends ConsumerStatefulWidget {
   final DataSnapshot snapshot;
@@ -164,17 +170,17 @@ class _ProductWidgetState extends ConsumerState<ProductWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return productsUI(
-      ref,
-      widget.snapshot.child('category').value.toString(),
-      widget.snapshot.child('pName').value.toString(),
-      widget.snapshot.child('price').value.toString(),
-      widget.snapshot.child('pid').value.toString(),
-      widget.snapshot.child('image').value.toString(),
-      widget.snapshot.child('type').value.toString(),
-      widget.snapshot.child('description').value.toString(),
-      _currentQuantity,
-          () {
+    return ProductsUI(
+      refa: ref,
+      category: widget.snapshot.child('category').value.toString(),
+      pName: widget.snapshot.child('pName').value.toString(),
+      price: widget.snapshot.child('price').value.toString(),
+      pid: widget.snapshot.child('pid').value.toString(),
+      image: widget.snapshot.child('image').value.toString(),
+      type: widget.snapshot.child('type').value.toString(),
+      description: widget.snapshot.child('description').value.toString(),
+      quantity: _currentQuantity,
+      onPlusTap: () {
         // Handle plus button tap
         if (_currentQuantity < 10) {
           // Update quantity in UI and database
@@ -185,7 +191,7 @@ class _ProductWidgetState extends ConsumerState<ProductWidget> {
               widget.snapshot.child('pid').value.toString(), _currentQuantity);
         }
       },
-          () {
+      onMinusTap: () {
         // Handle minus button tap
         if (_currentQuantity > 1) {
           // Update quantity in UI and database
@@ -200,126 +206,183 @@ class _ProductWidgetState extends ConsumerState<ProductWidget> {
   }
 }
 
-Widget productsUI(
-    WidgetRef ref,
-    String category,
-    String pName,
-    String price,
-    String pid,
-    String image,
-    String type,
-    String description,
-    int quantity,
-    VoidCallback onPlusTap, // Add callback for plus button tap
-    VoidCallback onMinusTap, // Add callback for minus button tap
-    ) {
-  return GestureDetector(
-    onTap: () {
-      // Handle the onTap event
-    },
-    child: Column(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          child: Stack(
-            children: [
-              Container(
-                height: 250,
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Image.network(
-                    image,
-                    fit: BoxFit.cover,
+class ProductsUI extends StatefulWidget {
+  final WidgetRef refa;
+  final String category;
+  final String pName;
+  final String price;
+  final String pid;
+  final String image;
+  final String type;
+  final String description;
+  final int quantity;
+  final VoidCallback onPlusTap;
+  final VoidCallback onMinusTap;
+
+  ProductsUI({
+    required this.refa,
+    required this.category,
+    required this.pName,
+    required this.price,
+    required this.pid,
+    required this.image,
+    required this.type,
+    required this.description,
+    required this.quantity,
+    required this.onPlusTap,
+    required this.onMinusTap,
+  });
+
+  @override
+  _ProductsUIState createState() => _ProductsUIState();
+}
+
+class _ProductsUIState extends State<ProductsUI> {
+  bool _itemAddedToCart = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Handle the onTap event
+      },
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: Stack(
+              children: [
+                Container(
+                  height: 250,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Image.network(
+                      widget.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              RatingBar(
-                initialRating: 4,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 20,
-                ratingWidget: RatingWidget(
-                  full: Icon(Icons.star, color: Colors.amber),
-                  half: Icon(Icons.star_half, color: Colors.amber),
-                  empty: Icon(Icons.star_border, color: Colors.amber),
-                ),
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                onRatingUpdate: (index) {
-                  // Handle rating updates if needed
-                },
-              ),
-              Text(
-                price,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                pName,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 20),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            description,
-            style: TextStyle(
-              fontSize: 16,
+              ],
             ),
-            textAlign: TextAlign.justify,
           ),
-        ),
-        SizedBox(height: 10),
-        Container(
-          color: Color(0xD5D0D0FF),
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 50, bottom: 5),
-                child: Builder(builder: (context) {
-                  return ElevatedButton(
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RatingBar(
+                  initialRating: 4,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 20,
+                  ratingWidget: RatingWidget(
+                    full: Icon(Icons.star, color: Colors.amber),
+                    half: Icon(Icons.star_half, color: Colors.amber),
+                    empty: Icon(Icons.star_border, color: Colors.amber),
+                  ),
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  onRatingUpdate: (index) {
+                    // Handle rating updates if needed
+                  },
+                ),
+
+                Text(
+                  widget.price,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  widget.pName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              widget.description,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.justify,
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            color: Color(0xD5D0D0FF),
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 50, bottom: 5),
+                  child: Builder(builder: (context) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        if (!_itemAddedToCart) {
+                          CartItem cartItem = CartItem(
+                            productName: widget.pName,
+                            quantity: widget.quantity,
+                            image: widget.image,
+                            price: widget.price,
+                          );
+
+                          widget.refa.read(cartstateprovider.notifier).addToCart(cartItem);
+
+                          widget.refa.read(counterProvider.notifier).state++;
+                          setState(() {
+                             count++;
+                            _itemAddedToCart = true;
+                          });
+
+
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red, // Change color as needed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: Text(
+                        'Add to Cart',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                SizedBox(width: 15),
+                Padding(
+                  padding: EdgeInsets.only(left: 40, bottom: 5),
+                  child: ElevatedButton(
                     onPressed: () {
-                      CartItem cartItem = CartItem(
-                          productName: pName,
-                          quantity: quantity,
-                          image: image,
-                          price: price);
-
-
-                      ref.read(cartstateprovider.notifier).addToCart(cartItem);
-
+                      // Handle Buy Now logic
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.red, // Change color as needed
@@ -328,43 +391,20 @@ Widget productsUI(
                       ),
                     ),
                     child: Text(
-                      'Add to Cart',
+                      'Buy Now',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                }),
-              ),
-              SizedBox(width: 15),
-              Padding(
-                padding: EdgeInsets.only(left: 40, bottom: 5),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle Buy Now logic
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // Change color as needed
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: Text(
-                    'Buy Now',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }

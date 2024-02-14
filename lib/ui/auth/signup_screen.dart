@@ -52,6 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xFFFFCC00),
         //automaticallyImplyLeading: false,
         title: Center(child: const Text('SIgn Up')),

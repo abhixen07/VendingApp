@@ -38,7 +38,7 @@ class _FabTabsState extends State<FabTabs> {
     MyCartPage(),
     //MyCartPage(cartItem: CartItem(productName: "productName", quantity: 1, image: "image", price: "")),
     //MyCartPage(catImage: '', title: '', tag: '',),
-    OrderhistoryPage(),
+    OrderHistoryPage(),
     ProfilePage(),
   ];
 
