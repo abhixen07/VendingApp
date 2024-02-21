@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vending_app/ui/Drawer/FabTab.dart';
+import 'package:vending_app/ui/MachineIntro/select_machine_for_item.dart';
 import 'package:vending_app/ui/auth/login_with_phone_number.dart';
 import 'package:vending_app/ui/auth/signup_screen.dart';
 import 'package:vending_app/ui/posts/post_screen.dart';
@@ -42,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
         .then((value) {
       Utils().toastMessage(value.user!.email.toString());
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => FabTabs(selectedIndex: 0)));
+          // context, MaterialPageRoute(builder: (context) => FabTabs(selectedIndex: 0)));
+          context, MaterialPageRoute(builder: (context) => selectMachineForItems()));
       setState(() {
         loading = false;
       });

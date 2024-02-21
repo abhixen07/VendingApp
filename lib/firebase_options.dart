@@ -44,38 +44,42 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD6H7bjsnaa2-YcryHyT7BADlrXI7EvPXo',
-    appId: '1:339680593433:web:f1c305c2ca678c4235cc88',
-    messagingSenderId: '339680593433',
-    projectId: 'vendingapp-8a1ff',
-    authDomain: 'vendingapp-8a1ff.firebaseapp.com',
-    storageBucket: 'vendingapp-8a1ff.appspot.com',
-    measurementId: 'G-T3GSBPNNSJ',
+    apiKey: 'AIzaSyBR5D6qWHaWAKDYWJgAmDnxQBChNa4JLDQ',
+    appId: '1:67582534550:web:068b39ca76d82d028c73b7',
+    messagingSenderId: '67582534550',
+    projectId: 'kotlin-3cc89',
+    authDomain: 'kotlin-3cc89.firebaseapp.com',
+    databaseURL: 'https://kotlin-3cc89-default-rtdb.firebaseio.com',
+    storageBucket: 'kotlin-3cc89.appspot.com',
+    measurementId: 'G-FJL3KHMCRT',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCzFlAW-BBltT0MuIYio5LLhsbcDZ5o-5M',
-    appId: '1:339680593433:android:704b07404b0e7a9c35cc88',
-    messagingSenderId: '339680593433',
-    projectId: 'vendingapp-8a1ff',
-    storageBucket: 'vendingapp-8a1ff.appspot.com',
+    apiKey: 'AIzaSyDwAKQtgcou6hnzWyCQNctdmZVW38ZB5zA',
+    appId: '1:67582534550:android:93888fd2bf1c45978c73b7',
+    messagingSenderId: '67582534550',
+    projectId: 'kotlin-3cc89',
+    databaseURL: 'https://kotlin-3cc89-default-rtdb.firebaseio.com',
+    storageBucket: 'kotlin-3cc89.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBOGxOn1pT_ZAo34D_PgGW1zhrtgmpyfxE',
-    appId: '1:339680593433:ios:e63a2a9f8e1c8c3e35cc88',
-    messagingSenderId: '339680593433',
-    projectId: 'vendingapp-8a1ff',
-    storageBucket: 'vendingapp-8a1ff.appspot.com',
+    apiKey: 'AIzaSyCJD-ilyk_qhjoRNyx_lI1MV14LQkC-g9A',
+    appId: '1:67582534550:ios:951ce74e6d1fa80e8c73b7',
+    messagingSenderId: '67582534550',
+    projectId: 'kotlin-3cc89',
+    databaseURL: 'https://kotlin-3cc89-default-rtdb.firebaseio.com',
+    storageBucket: 'kotlin-3cc89.appspot.com',
     iosBundleId: 'com.example.vendingApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBOGxOn1pT_ZAo34D_PgGW1zhrtgmpyfxE',
-    appId: '1:339680593433:ios:e08f8bde825ac28f35cc88',
-    messagingSenderId: '339680593433',
-    projectId: 'vendingapp-8a1ff',
-    storageBucket: 'vendingapp-8a1ff.appspot.com',
+    apiKey: 'AIzaSyCJD-ilyk_qhjoRNyx_lI1MV14LQkC-g9A',
+    appId: '1:67582534550:ios:06875cdc2560ca9f8c73b7',
+    messagingSenderId: '67582534550',
+    projectId: 'kotlin-3cc89',
+    databaseURL: 'https://kotlin-3cc89-default-rtdb.firebaseio.com',
+    storageBucket: 'kotlin-3cc89.appspot.com',
     iosBundleId: 'com.example.vendingApp.RunnerTests',
   );
 }

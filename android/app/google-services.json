@@ -1,13 +1,33 @@
 {
   "project_info": {
-    "project_number": "339680593433",
-    "project_id": "vendingapp-8a1ff",
-    "storage_bucket": "vendingapp-8a1ff.appspot.com"
+    "project_number": "67582534550",
+    "firebase_url": "https://kotlin-3cc89-default-rtdb.firebaseio.com",
+    "project_id": "kotlin-3cc89",
+    "storage_bucket": "kotlin-3cc89.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:339680593433:android:704b07404b0e7a9c35cc88",
+        "mobilesdk_app_id": "1:67582534550:android:a5d13b4030976ce88c73b7",
+        "android_client_info": {
+          "package_name": "com.example.kotlin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwAKQtgcou6hnzWyCQNctdmZVW38ZB5zA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67582534550:android:93888fd2bf1c45978c73b7",
         "android_client_info": {
           "package_name": "com.example.vending_app"
         }
@@ -15,7 +35,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCzFlAW-BBltT0MuIYio5LLhsbcDZ5o-5M"
+          "current_key": "AIzaSyDwAKQtgcou6hnzWyCQNctdmZVW38ZB5zA"
         }
       ],
       "services": {

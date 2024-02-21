@@ -36,8 +36,6 @@ class _FabTabsState extends State<FabTabs> {
   final List<Widget> pages = [
     HomePage(),
     MyCartPage(),
-    //MyCartPage(cartItem: CartItem(productName: "productName", quantity: 1, image: "image", price: "")),
-    //MyCartPage(catImage: '', title: '', tag: '',),
     OrderHistoryPage(),
     ProfilePage(),
   ];
